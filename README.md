@@ -2,43 +2,67 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+#Service Writer
 
-## Description
+## Описание задания
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Тестовое задание:
+
+Задача: реализовать приложение, которое осуществляет передачу больших объемов данных (например файлов) через систему обмена сообщениями NATS (https://nats.io/). Приложение должно состоять из 2х сервисов Reader и Writer, которые можно запустить на разных серверах (Для тестирования можно запускать 2 сервиса на одной машине, главное чтобы использовался выбранный транспорт) Сервис Reader должен осуществлять чтение и передачу данных Сервис Writer должен принимать данные от сервиса Reader, обрабатывать их и сохранять Дополнительно:
+1. Обработать ситуацию, когда сервис Reader отправляет сервису Writer больше данных, чем тот может обработать. Для примера, перед записью в сервисе Writer обрабатывайте входящие данные с помощью этого метода: const processData = (data) => { return new Promise(resolve => { setTimeout(() => { resolve(data); }, 500); });
+2. Реализовать поддержку различных видов транспортов (например websockets) (Возможно дополнительно поддержать обработку раличных видов данных);
+3. Покрыть тестами.
+
+## Описание выполнения
+
+Реализовано два сервиса Writer и Reader при запуске Reader в командной строке необходимо ввести путь к файлу для передачи.
+С сервисом Writer взаимодействия не требуются, кроме запуска
+
+
+
+## Platform
+>* NATS (Для запуска необходим сервер, для разработки можно использовать
+   > docker-compose.yml из корня проекта)
+>* SocketIO (не требует установки)
+>* NodeJs
+>* NestJs
+
+## Пример ENV файла для Writer
+Указанные параметры используются по умолчанию
+
+````dotenv
+MAIN_PATH = '/Users/mihsastv/Downloads/'
+HIGH_WATERMARK = 1000
+NATS_URL = 'nats://localhost:4222'
+
+#Выбрать транспорт, по умолчанию NATS
+SELECT_TRANSPORT='NATS'
+````
 
 ## Installation
+Для локальной установки postgres требуется
+установка
+docker-compose https://docs.docker.com/compose/install/
 
-```bash
+Также необходимо установить
+
+node js https://nodejs.org/en/download/
+
+nest js https://docs.nestjs.com/
+
+После установки из корня проекта выполнить
+``` shell script
+$ docker-composer up 
+```
+После этого
+
+``` shell script
 $ npm install
 ```
 
-## Running the app
+## Запуск приложения
 
 ```bash
-# development
-$ npm run start
 
 # watch mode
 $ npm run start:dev
@@ -52,24 +76,4 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
